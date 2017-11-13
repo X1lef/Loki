@@ -140,9 +140,9 @@ public class HorarioLaboralDAO {
         return list;
     }
 
-    public HorarioLaboral obtenerHorarioLaboral (String cedula_identidad) {
-        String sql = "SELECT * FROM horario_laboral WHERE cedula_identidad = ?";
-        HorarioLaboral HorarioLaboral = null;
+    public List<HorarioLaboral> obtenerHorarioLaboral (String cedula_identidad) {
+        String sql = "SELECT * FROM horario_laboral WHERE id_empleado = ?";
+        List<HorarioLaboral> listHorarioLab = new ArrayList<>();
 
         try {
             Connection connection = conexion.abrir();
@@ -150,7 +150,7 @@ public class HorarioLaboralDAO {
 
             statement.setString(1, cedula_identidad);
             ResultSet rs = statement.executeQuery();
-            if (rs.next()) HorarioLaboral = convertir(rs);
+            while (rs.next()) listHorarioLab.add(convertir(rs));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -159,7 +159,7 @@ public class HorarioLaboralDAO {
             cerrarTodo();
         }
 
-        return HorarioLaboral;
+        return listHorarioLab;
     }
 
     private HorarioLaboral convertir (ResultSet rs) throws SQLException {
