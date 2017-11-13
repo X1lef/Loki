@@ -141,7 +141,7 @@ public class HorarioLaboralDAO {
     }
 
     public HorarioLaboral obtenerHorarioLaboral (String cedula_identidad) {
-        String sql = "SELECT * FROM HorarioLaboral WHERE cedula_identidad = ?";
+        String sql = "SELECT * FROM horario_laboral WHERE cedula_identidad = ?";
         HorarioLaboral HorarioLaboral = null;
 
         try {
