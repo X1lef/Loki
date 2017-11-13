@@ -94,7 +94,7 @@ public class EmpleadoDAO {
     }
 
     public List<Empleado> todosLosEmpleados () {
-        final String sql = "SELECT cedula_identidad, nombre, apellido, activo FROM empleado";
+        final String sql = "SELECT cedula_identidad, nombre, apellido, activo FROM empleado ORDER BY nombre, apellido";
 
         List <Empleado> list = new ArrayList<>();
 
