@@ -61,4 +61,8 @@ public class Empleado {
     public void setNumeroDeCedulaNuevo(String numeroDeCedulaNuevo) {
         this.numeroDeCedulaNuevo = numeroDeCedulaNuevo;
     }
+
+    public String[] toArray () {
+        return new String[] {numeroDeCedula, nombre, apellido, "" + activo};
+    }
 }
