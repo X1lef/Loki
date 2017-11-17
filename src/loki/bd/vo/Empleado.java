@@ -62,7 +62,7 @@ public class Empleado {
         this.numeroDeCedulaNuevo = numeroDeCedulaNuevo;
     }
 
-    public String[] toArray () {
-        return new String[] {numeroDeCedula, nombre, apellido, "" + activo};
+    public Object[] toArray () {
+        return new Object[] {numeroDeCedula, nombre, apellido, activo};
     }
 }
