@@ -166,6 +166,31 @@ public class EmpleadoDAO {
         return Empleado;
     }
 
+    public List<Empleado> buscarEmpleado (String nombre) {
+        String sql = "SELECT * FROM empleado WHERE UPPER (nombre || ' ' || apellido) LIKE UPPER(? || '%')";
+
+        List <Empleado> list = new ArrayList<>();
+
+        try {
+            Connection dbConnection = conexion.abrir();
+            statement = dbConnection.prepareStatement(sql);
+            statement.setString(1, nombre);
+
+            ResultSet rs = statement.executeQuery();
+
+            //Inserto los registros a la lista de Empleados.
+            while (rs.next()) list.add(convertir(rs));
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+
+        } finally {
+            cerrarTodo();
+        }
+
+        return list;
+    }
+
     private Empleado convertir (ResultSet rs) throws SQLException {
         Empleado empleado = new Empleado ();
 
