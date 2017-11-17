@@ -71,6 +71,7 @@ public class EmpleadoDAO {
             cerrarTodo();
         }
     }
+
     public void actualizarEmpleado (Empleado empleado) {
         String sql = "UPDATE empleado SET cedula_identidad = ?, nombre = ?, apellido = ?, activo = ? WHERE cedula_identidad = ?";
 
@@ -95,6 +96,31 @@ public class EmpleadoDAO {
 
     public List<Empleado> todosLosEmpleados () {
         final String sql = "SELECT cedula_identidad, nombre, apellido, activo FROM empleado ORDER BY nombre, apellido";
+
+        List <Empleado> list = new ArrayList<>();
+
+        try {
+            Connection dbConnection = conexion.abrir();
+            statement = dbConnection.prepareStatement(sql);
+
+            ResultSet rs = statement.executeQuery();
+
+            //Inserto los registros a la lista de Empleados.
+            while (rs.next())
+                list.add(convertir(rs));
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+
+        } finally {
+            cerrarTodo();
+        }
+
+        return list;
+    }
+
+    public List<Empleado> todosLosEmpleadosActivos () {
+        final String sql = "SELECT cedula_identidad, nombre, apellido, activo FROM empleado WHERE activo = 1 ORDER BY nombre, apellido";
 
         List <Empleado> list = new ArrayList<>();
 
