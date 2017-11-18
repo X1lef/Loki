@@ -38,11 +38,36 @@ public class EmpleadoVista extends JDialog {
     private JTable jtCargaHoraria;
     private JButton jbGuardar, jbCancelar, jbEliminar, jbInsertarFilas, jbEliminarFilas;
     private HorarioLaboralDAO horarioLaboralDAO;
+    private EmpleadoConsultaVista empleadoConsultaVista;
     private EmpleadoDAO empleadoDAO;
     private EventoActionListener actionListener;
+    private String numCedulaEmplOper;
 
     EmpleadoVista (JFrame frame) {
-        super(frame, "Empleado", true);
+        super(frame);
+        init();
+        jbEliminar.setVisible(false);
+
+        setVisible(true);
+    }
+
+    EmpleadoVista (JDialog dialog, Empleado empleado) {
+        super(dialog);
+        init();
+
+        empleadoConsultaVista = (EmpleadoConsultaVista) dialog;
+        numCedulaEmplOper = empleado.getNumeroDeCedula();
+
+        //Se cambia el nombre del botón guardar por actualizar.
+        jbGuardar.setText("Actualizar");
+        jbGuardar.setActionCommand("jbActualizar");
+
+        setVisible(true);
+    }
+
+    private void init () {
+        setTitle("Empleado");
+        setModal(true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new GridBagLayout());
         setSize(620, 500);
@@ -120,8 +145,6 @@ public class EmpleadoVista extends JDialog {
         conf.fill = GridBagConstraints.HORIZONTAL;
 
         add(panelBotones(), conf);
-
-        setVisible(true);
     }
 
     private JPanel panelHorarioLaboral () {
@@ -174,8 +197,6 @@ public class EmpleadoVista extends JDialog {
         tc.setMinWidth(20);
         tc.setMaxWidth(20);
         tc.setCellRenderer(jtCargaHoraria.getTableHeader().getDefaultRenderer());
-
-        panel.add(new JScrollPane(jtCargaHoraria), conf);
 
         return panel;
     }
@@ -265,14 +286,12 @@ public class EmpleadoVista extends JDialog {
                     //Se obtiene los datos del horario laboral del empleado.
                     Calendar horaEntrada, horaSalida;
                     String horaEntradaConv, horaSalidaConv, dia;
-                    String datoTabla;
                     for (int f = 0; f < tableModel.getRowCount(); f += 2) {
                         for (int c = 1; c < 7; c++) {
-                            datoTabla = String.valueOf(tableModel.getValueAt(f, c));
+                            horaEntradaConv = String.valueOf(tableModel.getValueAt(f, c));
 
-                            if (!datoTabla.trim().isEmpty()) { //Si la hora de entrada esta vacia saltear celda.
+                            if (!horaEntradaConv.trim().isEmpty()) { //Si la hora de entrada esta vacia saltear celda.
                                 //Se obtiene la hora de entrada y la hora de salida.
-                                horaEntradaConv = String.valueOf(tableModel.getValueAt(f, c));
                                 horaSalidaConv = String.valueOf(tableModel.getValueAt(f + 1, c));
 
                                 dia = convertirDia(c);
