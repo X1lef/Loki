@@ -198,6 +198,8 @@ public class EmpleadoVista extends JDialog {
         tc.setMaxWidth(20);
         tc.setCellRenderer(jtCargaHoraria.getTableHeader().getDefaultRenderer());
 
+        panel.add(new JScrollPane(jtCargaHoraria), conf);
+
         return panel;
     }
 
