@@ -122,7 +122,9 @@ public class HorarioLaboralVista extends JDialog {
         jtHorarioLaboralPorDia.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtHorarioLaboralPorDia.getTableHeader().setReorderingAllowed(false);
 
-        panel.add(new JScrollPane(jtHorarioLaboralPorDia), conf);
+        JScrollPane sp = new JScrollPane(jtHorarioLaboralPorDia);
+        sp.getViewport().setBackground(Color.lightGray);
+        panel.add(sp, conf);
 
         return panel;
     }
