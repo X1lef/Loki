@@ -249,6 +249,28 @@ public class EmpleadoVista extends JDialog {
         return horaConvertida;
     }
 
+    private void limpiarComponentes () {
+        jtfId.setText(null);
+        jtfNombre.setText(null);
+        jtfApellido.setText(null);
+        jcbActivo.setSelected(true);
+
+        DefaultTableModel tableModel = (DefaultTableModel) jtCargaHoraria.getModel();
+
+        //Poner solo 4 filas.
+        while (tableModel.getRowCount() > 4) {
+            tableModel.removeRow(tableModel.getRowCount() -1);
+            tableModel.removeRow(tableModel.getRowCount() -1);
+        }
+
+        //Limpiar tabla.
+        for (int f = 0; f < 4; f ++) {
+            for (int c = 1; c < 7; c ++) {
+                tableModel.setValueAt("", f, c);
+            }
+        }
+    }
+
     private class ModeloTabla extends DefaultTableModel {
 
         ModeloTabla () {
@@ -308,6 +330,7 @@ public class EmpleadoVista extends JDialog {
                             }
                         }
                     }
+                    limpiarComponentes();
                     break;
 
                 case "jbEliminar":
