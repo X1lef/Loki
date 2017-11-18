@@ -19,15 +19,18 @@
 package loki.vista;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class HorarioLaboralVista extends JDialog {
     private JRadioButton jrbLunes, jrbMartes, jrbMiercoles, jrbJueves, jrbViernes, jrbSabado;
     private JTable jtHorarioLaboralPorDia;
     private JButton jbCancelar;
     private JPanel jpHorarioLaboral;
+    private EventoActionListener actionListener;
 
     HorarioLaboralVista (JFrame frame) {
         super (frame, "Horario Laboral", true);
@@ -36,6 +39,8 @@ public class HorarioLaboralVista extends JDialog {
         setSize(950, 500);
         setMinimumSize(new Dimension(500, 500));
         setLocationRelativeTo(null);
+
+        actionListener = new EventoActionListener();
 
         JPanel panelPrinc = new JPanel();
         panelPrinc.setLayout(new BoxLayout(panelPrinc, BoxLayout.Y_AXIS));
@@ -61,21 +66,27 @@ public class HorarioLaboralVista extends JDialog {
 
         jrbLunes = new JRadioButton("L", true);
         jrbLunes.setActionCommand("jrbLunes");
+        jrbLunes.addActionListener(actionListener);
 
         jrbMartes = new JRadioButton("M");
         jrbMartes.setActionCommand("jrbMartes");
+        jrbMartes.addActionListener(actionListener);
 
         jrbMiercoles = new JRadioButton("X");
         jrbMiercoles.setActionCommand("jrbMiercoles");
+        jrbMiercoles.addActionListener(actionListener);
 
         jrbJueves = new JRadioButton("J");
         jrbJueves.setActionCommand("jrbJueves");
+        jrbJueves.addActionListener(actionListener);
 
         jrbViernes = new JRadioButton("V");
         jrbViernes.setActionCommand("jrbViernes");
+        jrbViernes.addActionListener(actionListener);
 
         jrbSabado = new JRadioButton("S");
         jrbSabado.setActionCommand("jrbSabado");
+        jrbSabado.addActionListener(actionListener);
 
         ButtonGroup bg = new ButtonGroup();
         bg.add(jrbLunes);
@@ -121,6 +132,7 @@ public class HorarioLaboralVista extends JDialog {
 
         jbCancelar = new JButton("Cancelar");
         jbCancelar.setActionCommand("jbCancelar");
+        jbCancelar.addActionListener(actionListener);
         panel.add(jbCancelar);
 
         return panel;
@@ -131,6 +143,56 @@ public class HorarioLaboralVista extends JDialog {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
+        }
+    }
+
+    private class EventoActionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            switch (event.getActionCommand()) {
+                case "jbCancelar":
+                    dispose();
+                    break;
+                default:
+                    String dia = "Lunes";
+
+                    switch (event.getActionCommand()) {
+                        case "jrbMartes":
+                            if (jrbMartes.isSelected()) {
+                                dia = "Martes";
+                            }
+                            break;
+
+                        case "jrbMiercoles":
+                            if (jrbMiercoles.isSelected()) {
+                                dia = "Miercoles";
+                            }
+                            break;
+
+                        case "jrbJueves":
+                            if (jrbJueves.isSelected()) {
+                                dia = "Jueves";
+                            }
+                            break;
+
+                        case "jrbViernes":
+                            if (jrbViernes.isSelected()) {
+                                dia = "Viernes";
+                            }
+                            break;
+
+                        case "jrbSabado":
+                            if (jrbSabado.isSelected()) {
+                                dia = "Sabado";
+                            }
+                            break;
+                    }
+
+                    jpHorarioLaboral.setBorder(BorderFactory.createTitledBorder(null, dia, TitledBorder.CENTER,
+                            TitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.BOLD, 11)));
+                    //TODO: Se debe crear el método cargarTabla.
+            }
         }
     }
 }
