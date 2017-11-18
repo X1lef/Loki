@@ -336,9 +336,14 @@ public class EmpleadoVista extends JDialog {
                     break;
 
                 case "jbEliminar":
-                    //TODO: Necesito obtener el numero de cedula que ha sido cargado.
-                    horarioLaboralDAO.eliminarHorarioLaboral(jtfId.getText().trim());
-                    empleadoDAO.eliminarEmpleado(jtfId.getText().trim());
+                    int resp = JOptionPane.showConfirmDialog(EmpleadoVista.this, "¿Esta seguro que desea eliminar el registro?");
+                    if (resp == JOptionPane.OK_OPTION) {
+                        horarioLaboralDAO.eliminarHorarioLaboral(numCedulaEmplOper);
+                        empleadoDAO.eliminarEmpleado(numCedulaEmplOper);
+                        //Se actualiza la tabla de Empleado.
+                        empleadoConsultaVista.cargarTabla(new EmpleadoDAO().todosLosEmpleados());
+                        dispose();
+                    }
                     break;
 
                 case "jbCancelar":
