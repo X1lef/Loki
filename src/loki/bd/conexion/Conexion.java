@@ -23,12 +23,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion {
-    private static final String DB_CONNECTION = "jdbc:sqlite:horarioEmpleado.db";
+    private static final String DB_CONNECTION = "jdbc:postgresql://localhost:5432/horario_laboral";
+    private static final String DB_USER = "postgres";
+    private static final String DB_PASSWORD = "a4sf5h4j5gf5g";
     private Connection conexion = null;
 
     public Connection abrir () {
         try {
-            conexion = DriverManager.getConnection(DB_CONNECTION);
+            conexion = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
