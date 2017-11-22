@@ -19,15 +19,15 @@
 package loki.bd.vo;
 
 public class HorarioLaboral {
-    private int idCargaHoraria;
-    private String diaLaboral, idEmpleado;
-    private long horaEntrada, horaSalida;
+    private long idCargaHoraria;
+    private int diaLaboral;
+    private String idEmpleado, horaEntrada, horaSalida;
 
-    public int getIdCargaHoraria() {
+    public long getIdCargaHoraria() {
         return idCargaHoraria;
     }
 
-    public void setIdCargaHoraria(int idCargaHoraria) {
+    public void setIdCargaHoraria(long idCargaHoraria) {
         this.idCargaHoraria = idCargaHoraria;
     }
 
@@ -39,27 +39,27 @@ public class HorarioLaboral {
         this.idEmpleado = idEmpleado;
     }
 
-    public String getDiaLaboral() {
+    public int getDiaLaboral() {
         return diaLaboral;
     }
 
-    public void setDiaLaboral(String diaLaboral) {
+    public void setDiaLaboral(int diaLaboral) {
         this.diaLaboral = diaLaboral;
     }
 
-    public long getHoraEntrada() {
+    public String getHoraEntrada() {
         return horaEntrada;
     }
 
-    public void setHoraEntrada(long horaEntrada) {
+    public void setHoraEntrada(String horaEntrada) {
         this.horaEntrada = horaEntrada;
     }
 
-    public long getHoraSalida() {
+    public String getHoraSalida() {
         return horaSalida;
     }
 
-    public void setHoraSalida(long horaSalida) {
+    public void setHoraSalida(String horaSalida) {
         this.horaSalida = horaSalida;
     }
 }
