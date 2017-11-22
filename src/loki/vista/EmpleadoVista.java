@@ -232,29 +232,6 @@ public class EmpleadoVista extends JDialog {
         return panel;
     }
 
-    private String convertirDia (int index) {
-        switch (index) {
-            case 1: return "L";
-            case 2: return "M";
-            case 3: return "X";
-            case 4: return "J";
-            case 5: return "V";
-            default: return "S";
-        }
-    }
-
-    private Calendar convertirHora (String horaConvertir) {
-        String[] h = horaConvertir.split(":");
-        int hora = Integer.parseInt(h[0].trim());
-        int minuto = Integer.parseInt(h[1].trim());
-
-        Calendar horaConvertida = Calendar.getInstance();
-        horaConvertida.set(Calendar.HOUR_OF_DAY, hora);
-        horaConvertida.set(Calendar.MINUTE, minuto);
-
-        return horaConvertida;
-    }
-
     private void limpiarComponentes () {
         jtfId.setText(null);
         jtfNombre.setText(null);
