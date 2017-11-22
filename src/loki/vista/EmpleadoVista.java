@@ -31,7 +31,6 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Calendar;
 
 public class EmpleadoVista extends JDialog {
     private JTextField jtfId, jtfNombre, jtfApellido;
@@ -59,6 +58,7 @@ public class EmpleadoVista extends JDialog {
         empleadoConsultaVista = (EmpleadoConsultaVista) dialog;
         //Se guarda el id del Empleado.
         numCedulaEmplOper = empleado.getNumeroDeCedula();
+        cargarEmpleado(empleado);
 
         //Se cambia el nombre del botón guardar por actualizar.
         jbGuardar.setText("Actualizar");
@@ -230,6 +230,35 @@ public class EmpleadoVista extends JDialog {
         panel.add(jbCancelar);
 
         return panel;
+    }
+
+    private void cargarEmpleado (Empleado emp) {
+        jtfId.setText(emp.getNumeroDeCedula());
+        jtfNombre.setText(emp.getNombre());
+        jtfApellido.setText(emp.getApellido());
+        jcbActivo.setSelected(emp.isActivo());
+
+        listHorarioLab = horarioLaboralDAO.obtenerHorarioLaboral(emp.getNumeroDeCedula());
+
+        int c = 1, f = 0, cantFila = 4;
+        DefaultTableModel tableModel = (DefaultTableModel) jtCargaHoraria.getModel();
+        for (HorarioLaboral h : listHorarioLab) {
+
+            if (c != h.getDiaLaboral()) {
+                c ++;
+                f = 0;
+            } else {
+                if (cantFila == f) {
+                    cantFila += 2;
+                    tableModel.addRow(new String[]{"E", "", "", "", "", "", ""});
+                    tableModel.addRow(new String[]{"S", "", "", "", "", "", ""});
+                }
+            }
+            tableModel.setValueAt(h.getHoraEntrada(), f, c);
+            tableModel.setValueAt(h.getHoraSalida(), f + 1, c);
+
+            f += 2;
+        }
     }
 
     private void limpiarComponentes () {
