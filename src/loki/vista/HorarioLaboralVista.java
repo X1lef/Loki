@@ -76,26 +76,32 @@ public class HorarioLaboralVista extends JDialog {
 
 
         jrbLunes = new JRadioButton("L", true);
+        jrbLunes.setFocusable(false);
         jrbLunes.setActionCommand("jrbLunes");
         jrbLunes.addActionListener(actionListener);
 
         jrbMartes = new JRadioButton("M");
+        jrbMartes.setFocusable(false);
         jrbMartes.setActionCommand("jrbMartes");
         jrbMartes.addActionListener(actionListener);
 
         jrbMiercoles = new JRadioButton("X");
+        jrbMiercoles.setFocusable(false);
         jrbMiercoles.setActionCommand("jrbMiercoles");
         jrbMiercoles.addActionListener(actionListener);
 
         jrbJueves = new JRadioButton("J");
+        jrbJueves.setFocusable(false);
         jrbJueves.setActionCommand("jrbJueves");
         jrbJueves.addActionListener(actionListener);
 
         jrbViernes = new JRadioButton("V");
+        jrbViernes.setFocusable(false);
         jrbViernes.setActionCommand("jrbViernes");
         jrbViernes.addActionListener(actionListener);
 
         jrbSabado = new JRadioButton("S");
+        jrbSabado.setFocusable(false);
         jrbSabado.setActionCommand("jrbSabado");
         jrbSabado.addActionListener(actionListener);
 
