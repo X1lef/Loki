@@ -18,12 +18,21 @@
 
 package loki.vista;
 
+import loki.bd.dao.EmpleadoDAO;
+import loki.bd.dao.HorarioLaboralDAO;
+import loki.bd.vo.Empleado;
+import loki.bd.vo.HorarioLaboral;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.util.TreeSet;
 
 public class HorarioLaboralVista extends JDialog {
     private JRadioButton jrbLunes, jrbMartes, jrbMiercoles, jrbJueves, jrbViernes, jrbSabado;
@@ -54,6 +63,8 @@ public class HorarioLaboralVista extends JDialog {
         panelPrinc.add(panelBoton());
 
         add(panelPrinc);
+
+        cargarTabla(1); //Por defecto se carga el día lunes.
 
         setVisible(true);
     }
@@ -140,8 +151,129 @@ public class HorarioLaboralVista extends JDialog {
         return panel;
     }
 
-    private class ModeloTabla extends DefaultTableModel {
+    private void cargarTabla (int indexDia) {
+        jtHorarioLaboralPorDia.setModel(new ModeloTabla());
 
+        DefaultTableModel tableModel = (DefaultTableModel) jtHorarioLaboralPorDia.getModel();
+
+        //Obtener a todos los empleados activos.
+        List<Empleado> listEmp = new EmpleadoDAO().todosLosEmpleadosActivos();
+        String[] arrayEmp = new String[listEmp.size() + 1];
+        StringBuilder nombreApellido;
+
+        //Se carga el nombre de los instructores.
+        for (int i = 0; i < listEmp.size(); i ++) {
+            nombreApellido = new StringBuilder();
+            nombreApellido.append(listEmp.get(i).getNombre());
+            nombreApellido.append(" ");
+            nombreApellido.append(listEmp.get(i).getApellido());
+            arrayEmp[i] = nombreApellido.toString();
+        }
+        arrayEmp[listEmp.size()] = "Cantidad de instructores";
+
+        //Se agrega la primera celda.
+        tableModel.addColumn("Instructor", arrayEmp);
+
+        //Se obtiene los horarios laborales de los empleados de un determinado día.
+        List<HorarioLaboral> listHorarioLab = new HorarioLaboralDAO().obtenerHorarioLabDia(indexDia);
+
+        TreeSet<Hora> tsHora = new TreeSet<>();
+        Hora hora;
+
+        //Se cargar el TreeSet.
+        for (HorarioLaboral hl : listHorarioLab) {
+            hora = new Hora();
+
+            //Se guarda hora de entrada.
+            hora.setHora(hl.getHoraEntrada());
+            tsHora.add(hora);
+
+            //Se guarda hora de salida.
+            hora = new Hora();
+            hora.setHora(hl.getHoraSalida());
+            tsHora.add(hora);
+        }
+
+        List<Hora> listHL = new ArrayList<>(tsHora);
+        int cantEmpl, length = listHL.size() - 1;
+        String horaBuscar;
+
+        for (int c = 1, k = 0; k < length; c ++, k ++) {
+            horaBuscar = listHL.get(k).hora;
+            cantEmpl = 0;
+
+            //Se agrega las cabeceras.
+            if (!jrbSabado.isSelected() && "12:00".equals(listHL.get(k + 1).hora) || k + 1 == length) {
+                k ++;
+                tableModel.addColumn(horaBuscar + " - " + listHL.get(k).hora);
+            } else {
+                tableModel.addColumn(horaBuscar);
+            }
+
+            if (c == 1) {
+                for (int f = 0; f < tableModel.getRowCount() - 1; f++) {
+                    for (HorarioLaboral hl : listHorarioLab) {
+                        if (hl.getIdEmpleado().equals(listEmp.get(f).getNumeroDeCedula())) {
+                            String hFormato = hl.getHoraEntrada();
+
+                            if (hFormato.equals(horaBuscar)) {
+                                tableModel.setValueAt("Presente", f, c);
+                                cantEmpl++;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //Se agrega cantidad de instructores.
+                tableModel.setValueAt(cantEmpl, tableModel.getRowCount() - 1, c);
+
+            } else {
+                boolean entradaSalida;
+                for (int f = 0; f < tableModel.getRowCount() - 1; f++) {
+                    entradaSalida = false;
+                    for (HorarioLaboral hl : listHorarioLab) {
+                        if (hl.getIdEmpleado().equals(listEmp.get(f).getNumeroDeCedula())) {
+                            String hFormato = hl.getHoraEntrada();
+
+                            if (hFormato.equals(horaBuscar)) {
+                                tableModel.setValueAt("Presente", f, c);
+                                cantEmpl++;
+                                entradaSalida = true;
+                                break;
+                            }
+
+                            hFormato = hl.getHoraSalida();
+
+                            System.out.println("Hora comparar " + hFormato);
+                            if (hFormato.equals(horaBuscar)) {
+                                entradaSalida = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!entradaSalida) {
+                        String state = String.valueOf(tableModel.getValueAt(f, c - 1));
+                        System.out.println("Estado : " + state);
+                        if (state.equals("Presente")) {
+                            cantEmpl++;
+                            tableModel.setValueAt("Presente", f, c);
+                        }
+                    }
+                }
+                //Se agrega cantidad de instructores.
+                tableModel.setValueAt(cantEmpl, tableModel.getRowCount() - 1, c);
+            }
+        }
+
+        //Se configura el campo Instructor.
+        TableColumn tc = jtHorarioLaboralPorDia.getColumn("Instructor");
+        tc.setMinWidth(250);
+        tc.setPreferredWidth(250);
+        tc.setCellRenderer(jtHorarioLaboralPorDia.getTableHeader().getDefaultRenderer());
+    }
+
+    private class ModeloTabla extends DefaultTableModel {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -158,43 +290,95 @@ public class HorarioLaboralVista extends JDialog {
                     break;
                 default:
                     String dia = "Lunes";
+                    int indexDia = 1;
 
                     switch (event.getActionCommand()) {
                         case "jrbMartes":
                             if (jrbMartes.isSelected()) {
                                 dia = "Martes";
+                                indexDia = 2;
                             }
                             break;
 
                         case "jrbMiercoles":
                             if (jrbMiercoles.isSelected()) {
-                                dia = "Miercoles";
+                                dia = "Miércoles";
+                                indexDia = 3;
                             }
                             break;
 
                         case "jrbJueves":
                             if (jrbJueves.isSelected()) {
                                 dia = "Jueves";
+                                indexDia = 4;
                             }
                             break;
 
                         case "jrbViernes":
                             if (jrbViernes.isSelected()) {
                                 dia = "Viernes";
+                                indexDia = 5;
                             }
                             break;
 
                         case "jrbSabado":
                             if (jrbSabado.isSelected()) {
-                                dia = "Sabado";
+                                dia = "Sábado";
+                                indexDia = 6;
                             }
                             break;
                     }
 
                     jpHorarioLaboral.setBorder(BorderFactory.createTitledBorder(null, dia, TitledBorder.CENTER,
                             TitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.BOLD, 11)));
-                    //TODO: Se debe crear el método cargarTabla.
+                    cargarTabla(indexDia);
             }
+        }
+    }
+
+    //Clase que utiliza el TreeSet para guardar las horas y ordenarlas.
+    private class Hora implements Comparable<Hora> {
+        private String hora;
+
+        String getHora() {
+            return hora;
+        }
+
+        void setHora(String hora) {
+            this.hora = hora;
+        }
+
+        @Override
+        public int compareTo(Hora h) {
+            //Se extrae la hora y el minuto.
+            String[] hora1 = h.hora.split(":");
+            String[] hora2 = hora.split(":");
+
+            //Convertir a integer.
+            int h1 = Integer.parseInt(hora1[0]);
+            int m1 = Integer.parseInt(hora1[1]);
+
+            int h2 = Integer.parseInt(hora2[0]);
+            int m2 = Integer.parseInt(hora2[1]);
+
+            if (h2 > h1) return 1;
+            if (h2 < h1) return -1;
+            if (h1 == h2) {
+                if (m2 > m1) return 1;
+                if (m2 < m1) return -1;
+            }
+
+            return 0;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof Hora) {
+                Hora h = (Hora) o;
+                return h.hora.equals(hora);
+            }
+
+            return false;
         }
     }
 }
