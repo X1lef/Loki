@@ -160,6 +160,29 @@ public class HorarioLaboralDAO {
         return listHorarioLab;
     }
 
+    public List<HorarioLaboral> obtenerHorarioLabDia (int indexDia) {
+        String sql = "SELECT id, id_empleado, dia_laboral, to_char(hora_entrada, 'HH24:MI'),to_char(hora_salida, 'HH24:MI') " +
+                "FROM horario_laboral WHERE dia_laboral = ? ORDER BY hora_entrada";
+        List<HorarioLaboral> listHorarioLab = new ArrayList<>();
+
+        try {
+            Connection connection = conexion.abrir();
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, indexDia);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) listHorarioLab.add(convertir(rs));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            cerrarTodo();
+        }
+
+        return listHorarioLab;
+    }
+
     private HorarioLaboral convertir (ResultSet rs) throws SQLException {
         HorarioLaboral horarioLaboral = new HorarioLaboral ();
 
