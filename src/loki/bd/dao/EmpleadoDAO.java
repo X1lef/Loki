@@ -42,7 +42,7 @@ public class EmpleadoDAO {
             statement.setString(1, empleado.getNumeroDeCedula());
             statement.setString(2, empleado.getNombre());
             statement.setString(3, empleado.getApellido());
-            statement.setInt(4, empleado.isActivo() ? 1 : 0);
+            statement.setBoolean(4, empleado.isActivo());
 
             statement.executeUpdate();
 
@@ -82,7 +82,8 @@ public class EmpleadoDAO {
             statement.setString(1, empleado.getNumeroDeCedulaNuevo());
             statement.setString(2, empleado.getNombre());
             statement.setString(3, empleado.getApellido());
-            statement.setString(4, empleado.getNumeroDeCedula());
+            statement.setBoolean(4, empleado.isActivo());
+            statement.setString(5, empleado.getNumeroDeCedula());
 
             statement.executeUpdate();
 
@@ -120,7 +121,7 @@ public class EmpleadoDAO {
     }
 
     public List<Empleado> todosLosEmpleadosActivos () {
-        final String sql = "SELECT cedula_identidad, nombre, apellido, activo FROM empleado WHERE activo = 1 ORDER BY nombre, apellido";
+        final String sql = "SELECT cedula_identidad, nombre, apellido, activo FROM empleado WHERE activo = 'true' ORDER BY nombre, apellido";
 
         List <Empleado> list = new ArrayList<>();
 
@@ -197,7 +198,7 @@ public class EmpleadoDAO {
         empleado.setNumeroDeCedula(rs.getString(1));
         empleado.setNombre(rs.getString(2));
         empleado.setApellido(rs.getString(3));
-        empleado.setActivo(rs.getInt(4) == 1);
+        empleado.setActivo(rs.getBoolean(4));
 
         return empleado;
     }

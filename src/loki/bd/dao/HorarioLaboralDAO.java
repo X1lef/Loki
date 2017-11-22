@@ -21,10 +21,7 @@ package loki.bd.dao;
 import loki.bd.conexion.Conexion;
 import loki.bd.vo.HorarioLaboral;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,9 +37,10 @@ public class HorarioLaboralDAO {
             statement = dbConexion.prepareStatement(sql);
 
             statement.setString(1, horarioLaboral.getIdEmpleado());
-            statement.setString(2, horarioLaboral.getDiaLaboral());
-            statement.setLong(3, horarioLaboral.getHoraEntrada());
-            statement.setLong(4, horarioLaboral.getHoraSalida());
+            statement.setInt(2, horarioLaboral.getDiaLaboral());
+            //Formato de hora que necesita la clase Time hh:mm:ss.
+            statement.setTime(3, Time.valueOf(horarioLaboral.getHoraEntrada() + ":00"));
+            statement.setTime(4, Time.valueOf(horarioLaboral.getHoraSalida() + ":00"));
 
             statement.executeUpdate();
 
@@ -54,16 +52,14 @@ public class HorarioLaboralDAO {
         }
     }
 
-    public void eliminarHorarioLaboral (String idEmpleado, String diaLaboral, long horaEntrada) {
-        String sql = "DELETE FROM horario_laboral WHERE id_empleado = ? and diaLaboral = ? and hora_entrada = ?";
+    public void eliminarHorarioLaboral (long id) {
+        String sql = "DELETE FROM horario_laboral WHERE id = ?";
 
         try {
             Connection dbConnection = conexion.abrir();
             statement = dbConnection.prepareStatement(sql);
 
-            statement.setString(1, idEmpleado);
-            statement.setString(2, diaLaboral);
-            statement.setLong(3, horaEntrada);
+            statement.setLong(1, id);
             statement.executeUpdate();
 
         } catch (SQLException e) {
@@ -100,10 +96,11 @@ public class HorarioLaboralDAO {
             statement  = dbConnection.prepareStatement(sql);
 
             statement.setString(1, horarioLaboral.getIdEmpleado());
-            statement.setString(2, horarioLaboral.getDiaLaboral());
-            statement.setLong(3, horarioLaboral.getHoraEntrada());
-            statement.setLong(4, horarioLaboral.getHoraSalida());
-            statement.setInt(5, horarioLaboral.getIdCargaHoraria());
+            statement.setInt(2, horarioLaboral.getDiaLaboral());
+            //Formato de hora que necesita la clase Time hh:mm:ss.
+            statement.setTime(3,  Time.valueOf(horarioLaboral.getHoraEntrada() + ":00"));
+            statement.setTime(4,  Time.valueOf(horarioLaboral.getHoraSalida() + ":00"));
+            statement.setLong(5, horarioLaboral.getIdCargaHoraria());
 
             statement.executeUpdate();
 
@@ -141,7 +138,8 @@ public class HorarioLaboralDAO {
     }
 
     public List<HorarioLaboral> obtenerHorarioLaboral (String cedula_identidad) {
-        String sql = "SELECT * FROM horario_laboral WHERE id_empleado = ?";
+        String sql = "SELECT id, id_empleado, dia_laboral, to_char(hora_entrada, 'HH24:MI'), to_char(hora_salida, 'HH24:MI') " +
+                "FROM horario_laboral WHERE id_empleado = ? ORDER BY dia_laboral, hora_entrada";
         List<HorarioLaboral> listHorarioLab = new ArrayList<>();
 
         try {
@@ -165,11 +163,11 @@ public class HorarioLaboralDAO {
     private HorarioLaboral convertir (ResultSet rs) throws SQLException {
         HorarioLaboral horarioLaboral = new HorarioLaboral ();
 
-        horarioLaboral.setIdCargaHoraria(rs.getInt(1));
+        horarioLaboral.setIdCargaHoraria(rs.getLong(1));
         horarioLaboral.setIdEmpleado(rs.getString(2));
-        horarioLaboral.setDiaLaboral(rs.getString(3));
-        horarioLaboral.setHoraEntrada(rs.getLong(4));
-        horarioLaboral.setHoraSalida(rs.getLong(5));
+        horarioLaboral.setDiaLaboral(rs.getInt(3));
+        horarioLaboral.setHoraEntrada(rs.getString(4));
+        horarioLaboral.setHoraSalida(rs.getString(5));
 
         return horarioLaboral;
     }
