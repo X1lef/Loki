@@ -29,6 +29,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -136,6 +137,7 @@ public class HorarioLaboralVista extends JDialog {
         conf.fill = GridBagConstraints.BOTH;
 
         jtHorarioLaboralPorDia = new JTable(new ModeloTabla());
+        jtHorarioLaboralPorDia.setDefaultRenderer(Object.class, new CeldaRenderizado());
         jtHorarioLaboralPorDia.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtHorarioLaboralPorDia.getTableHeader().setReorderingAllowed(false);
 
@@ -200,18 +202,18 @@ public class HorarioLaboralVista extends JDialog {
             tsHora.add(hora);
         }
 
-        List<Hora> listHL = new ArrayList<>(tsHora);
-        int cantEmpl, length = listHL.size() - 1;
+        List<Hora> listCabecera = new ArrayList<>(tsHora); //Contiene las horas que hay en el día seleccionado.
+        int cantEmpl, length = listCabecera.size() - 1;
         String horaBuscar;
 
         for (int c = 1, k = 0; k < length; c ++, k ++) {
-            horaBuscar = listHL.get(k).hora;
+            horaBuscar = listCabecera.get(k).hora;
             cantEmpl = 0;
 
             //Se agrega las cabeceras.
-            if (!jrbSabado.isSelected() && "12:00".equals(listHL.get(k + 1).hora) || k + 1 == length) {
+            if (!jrbSabado.isSelected() && "12:00".equals(listCabecera.get(k + 1).hora) || k + 1 == length) {
                 k ++;
-                tableModel.addColumn(horaBuscar + " - " + listHL.get(k).hora);
+                tableModel.addColumn(horaBuscar + " - " + listCabecera.get(k).hora);
             } else {
                 tableModel.addColumn(horaBuscar);
             }
@@ -220,10 +222,10 @@ public class HorarioLaboralVista extends JDialog {
                 for (int f = 0; f < tableModel.getRowCount() - 1; f++) {
                     for (HorarioLaboral hl : listHorarioLab) {
                         if (hl.getIdEmpleado().equals(listEmp.get(f).getNumeroDeCedula())) {
-                            String hFormato = hl.getHoraEntrada();
+                            String h = hl.getHoraEntrada();
 
-                            if (hFormato.equals(horaBuscar)) {
-                                tableModel.setValueAt("Presente", f, c);
+                            if (h.equals(horaBuscar)) {
+                                tableModel.setValueAt(new ImageIcon(getClass().getResource("img/presente.png")), f, c);
                                 cantEmpl++;
                                 break;
                             }
@@ -237,21 +239,21 @@ public class HorarioLaboralVista extends JDialog {
                 boolean entradaSalida;
                 for (int f = 0; f < tableModel.getRowCount() - 1; f++) {
                     entradaSalida = false;
+                    //Se comprueba si la hora de entrada y salida del empleado coincide con la hora buscada.
                     for (HorarioLaboral hl : listHorarioLab) {
                         if (hl.getIdEmpleado().equals(listEmp.get(f).getNumeroDeCedula())) {
-                            String hFormato = hl.getHoraEntrada();
+                            String h = hl.getHoraEntrada();
 
-                            if (hFormato.equals(horaBuscar)) {
-                                tableModel.setValueAt("Presente", f, c);
+                            if (h.equals(horaBuscar)) {
+                                tableModel.setValueAt(new ImageIcon(getClass().getResource("img/presente.png")), f, c);
                                 cantEmpl++;
                                 entradaSalida = true;
                                 break;
                             }
 
-                            hFormato = hl.getHoraSalida();
+                            h = hl.getHoraSalida();
 
-                            System.out.println("Hora comparar " + hFormato);
-                            if (hFormato.equals(horaBuscar)) {
+                            if (h.equals(horaBuscar)) {
                                 entradaSalida = true;
                                 break;
                             }
@@ -259,11 +261,20 @@ public class HorarioLaboralVista extends JDialog {
                     }
 
                     if (!entradaSalida) {
-                        String state = String.valueOf(tableModel.getValueAt(f, c - 1));
-                        System.out.println("Estado : " + state);
-                        if (state.equals("Presente")) {
-                            cantEmpl++;
-                            tableModel.setValueAt("Presente", f, c);
+                        //Extraigo la hora anterior.
+                        String horaAnt = listCabecera.get(k - 1).hora;
+
+                        /*
+                        Si son las 12:00hs todos los empleados salieron, así que al volver solo se tendrá
+                        que cargar sus horarios de entrada.
+                        Los sábados si se debe tener en cuenta las 12:00hs.
+                         */
+                        if (jrbSabado.isSelected() || !horaAnt.equals("12:00")) {
+                            Icon icon = (Icon)tableModel.getValueAt(f, c - 1);
+                            if (icon != null) {
+                                cantEmpl++;
+                                tableModel.setValueAt(new ImageIcon(getClass().getResource("img/presente.png")), f, c);
+                            }
                         }
                     }
                 }
@@ -338,6 +349,27 @@ public class HorarioLaboralVista extends JDialog {
                     jpHorarioLaboral.setBorder(BorderFactory.createTitledBorder(null, dia, TitledBorder.CENTER,
                             TitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.BOLD, 11)));
                     cargarTabla(indexDia);
+            }
+        }
+    }
+
+    private class CeldaRenderizado extends DefaultTableCellRenderer {
+        protected void setValue(Object value) {
+            //Valor por defecto.
+            setText(null);
+            setIcon(null);
+
+            if (value instanceof Icon) {
+                setIcon((Icon)value);
+                setHorizontalAlignment(SwingConstants.CENTER);
+
+            } else {
+                if (value != null) {
+                    setText(String.valueOf(value));
+                    setFont(new Font("Tahoma", Font.BOLD, 11));
+                    setForeground(new Color(0x013ADF));
+                    setHorizontalTextPosition(SwingConstants.CENTER);
+                }
             }
         }
     }
