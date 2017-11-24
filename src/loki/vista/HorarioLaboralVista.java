@@ -26,6 +26,7 @@ import loki.bd.vo.HorarioLaboral;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.border.TitledBorder;
@@ -65,9 +66,57 @@ public class HorarioLaboralVista extends JDialog {
 
         add(panelPrinc);
 
-        cargarTabla(1); //Por defecto se carga el día lunes.
+        int indexDia = diaLaboralActual();
+        cargarTabla(indexDia);
+        seleccionarDia(indexDia);
 
         setVisible(true);
+    }
+
+    private int diaLaboralActual () {
+        LocalDate ld = LocalDate.now();
+        int dia = ld.getDayOfWeek().getValue();
+        if (dia == 7) dia = 1;
+
+        return dia;
+    }
+
+    private void seleccionarDia (int dia) {
+        String diaSemana = "Sábado";
+
+        switch (dia) {
+            case 1:
+                jrbLunes.setSelected(true);
+                diaSemana = "Lunes";
+                break;
+
+            case 2:
+                jrbMartes.setSelected(true);
+                diaSemana = "Martes";
+                break;
+
+            case 3:
+                jrbMiercoles.setSelected(true);
+                diaSemana = "Miércoles";
+                break;
+
+            case 4:
+                jrbJueves.setSelected(true);
+                diaSemana = "Jueves";
+                break;
+
+            case 5:
+                jrbViernes.setSelected(true);
+                diaSemana = "Viernes";
+                break;
+
+            case 6:
+                jrbSabado.setSelected(true);
+                break;
+        }
+
+        jpHorarioLaboral.setBorder(BorderFactory.createTitledBorder(null, diaSemana, TitledBorder.CENTER,
+                TitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.BOLD, 11)));
     }
 
     private JPanel panelDiaLaboral () {
