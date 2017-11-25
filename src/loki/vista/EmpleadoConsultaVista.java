@@ -24,8 +24,11 @@ import loki.bd.vo.Empleado;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -37,8 +40,10 @@ public class EmpleadoConsultaVista extends JDialog {
     private JPopupMenu popupMenu;
     private EventoActionListener actionListener;
     private EventoMouseListener mouseListener;
+    private EventoDocumentListener documentListener;
     private List<Empleado> listEmpleado;
     private EmpleadoDAO empleadoDAO;
+    private boolean realizoBusq;
 
     public EmpleadoConsultaVista (JFrame frame) {
         super(frame, "Consulta Empleado", true);
@@ -50,6 +55,7 @@ public class EmpleadoConsultaVista extends JDialog {
 
         actionListener = new EventoActionListener();
         mouseListener = new EventoMouseListener();
+        documentListener = new EventoDocumentListener();
         empleadoDAO = new EmpleadoDAO();
         listEmpleado = new ArrayList<>();
 
@@ -91,6 +97,8 @@ public class EmpleadoConsultaVista extends JDialog {
         conf.insets = new Insets(10, 20, 10, 10);
 
         jtfNombreApellido = new JTextField(25);
+        jtfNombreApellido.getDocument().addDocumentListener(documentListener);
+
         panel.add (jtfNombreApellido, conf);
 
         //Fila 0 columna 1.
@@ -127,14 +135,12 @@ public class EmpleadoConsultaVista extends JDialog {
     void cargarTabla (List<Empleado> listEmpleado) {
         this.listEmpleado = listEmpleado;
 
-        if (!listEmpleado.isEmpty()) {
-            ModeloTabla tableModel = new ModeloTabla();
+        ModeloTabla tableModel = new ModeloTabla();
 
-            for (Empleado e : listEmpleado) tableModel.addRow(e.toArray());
+        for (Empleado e : listEmpleado) tableModel.addRow(e.toArray());
 
-            jtEmpleado.setModel(tableModel);
-            jtEmpleado.updateUI();
-        }
+        jtEmpleado.setModel(tableModel);
+        jtEmpleado.updateUI();
     }
 
     private boolean datosValidos () {
@@ -213,6 +219,43 @@ public class EmpleadoConsultaVista extends JDialog {
 
                 if (jtEmpleado.isRowSelected(fila)) {
                     popupMenu.show(jtEmpleado, p.x, p.y);
+                }
+            }
+        }
+    }
+
+    private class EventoDocumentListener implements DocumentListener {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            buscarNombre();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            if (realizoBusq && jtfNombreApellido.getText().isEmpty()) {
+                cargarTabla(empleadoDAO.todosLosEmpleados());
+                realizoBusq = false;
+            } else {
+                buscarNombre();
+            }
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {}
+
+        private void buscarNombre () {
+            String nombre = jtfNombreApellido.getText().trim();
+
+            if (!nombre.isEmpty()) {
+                List<Empleado> listEmp = empleadoDAO.buscarEmpleado(nombre);
+                realizoBusq = true;
+
+                if (!listEmp.isEmpty()) {
+                    cargarTabla(listEmp);
+                    listEmpleado = listEmp;
+                } else {
+                    //Se retorna una lista vacía.
+                    cargarTabla(Collections.emptyList());
                 }
             }
         }
