@@ -281,7 +281,7 @@ public class EmpleadoConsultaVista extends JDialog {
 
             if (value instanceof Boolean) {
                 if (value.equals(Boolean.TRUE)){
-                    setIcon(new ImageIcon(getClass().getResource("img/tick.png")));
+                    setIcon(new ImageIcon(getClass().getResource("img/presente.png")));
                     setHorizontalAlignment(SwingConstants.CENTER);
                 }
 
