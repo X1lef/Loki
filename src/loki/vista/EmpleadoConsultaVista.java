@@ -22,15 +22,13 @@ import loki.bd.dao.EmpleadoDAO;
 import loki.bd.vo.Empleado;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class EmpleadoConsultaVista extends JDialog {
     private JTextField jtfNombreApellido;
@@ -58,6 +56,7 @@ public class EmpleadoConsultaVista extends JDialog {
         jtEmpleado = new JTable();
         jtEmpleado.addMouseListener(mouseListener);
         jtEmpleado.getTableHeader().setReorderingAllowed(false);
+        jtEmpleado.setDefaultRenderer(Object.class, new CeldaRenderizado());
         crearMenuEmergente();
 
         JPanel panelPrinc = new JPanel();
@@ -109,12 +108,17 @@ public class EmpleadoConsultaVista extends JDialog {
     }
 
     private JPanel panelBotones () {
-        JPanel panel = new JPanel (new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        JPanel panel = new JPanel ();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+        JLabel jlInfo = new JLabel("Realice doble click sobre un registro para alterarlo.");
+        jlInfo.setFont(new Font("Tahoma", Font.BOLD, 11));
+        panel.add(jlInfo);
+        panel.add(Box.createHorizontalGlue());
 
         JButton jbCancelar = new JButton("Cancelar");
         jbCancelar.setActionCommand("jbCancelar");
         jbCancelar.addActionListener(actionListener);
-
         panel.add(jbCancelar);
 
         return panel;
@@ -215,7 +219,6 @@ public class EmpleadoConsultaVista extends JDialog {
     }
 
     private class ModeloTabla extends DefaultTableModel {
-        private Class[] type = {String.class, String.class, String.class, Boolean.class};
 
         ModeloTabla () {
             super (new String[] {"C.I.", "Nombre", "Apellido", "Activo"}, 0);
@@ -225,10 +228,27 @@ public class EmpleadoConsultaVista extends JDialog {
         public boolean isCellEditable(int row, int column) {
             return false;
         }
+    }
 
-        @Override
-        public Class<?> getColumnClass(int index) {
-            return type[index];
+    private class CeldaRenderizado extends DefaultTableCellRenderer {
+        protected void setValue(Object value) {
+            //Valor por defecto.
+            setText(null);
+            setIcon(null);
+
+            if (value instanceof Boolean) {
+                if (value.equals(Boolean.TRUE)){
+                    setIcon(new ImageIcon(getClass().getResource("img/tick.png")));
+                    setHorizontalAlignment(SwingConstants.CENTER);
+                }
+
+            } else {
+                if (value != null) {
+                    setText(String.valueOf(value));
+                    setHorizontalTextPosition(SwingConstants.LEFT);
+                    setHorizontalAlignment(SwingConstants.LEFT);
+                }
+            }
         }
     }
 }
