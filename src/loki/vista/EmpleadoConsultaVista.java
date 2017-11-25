@@ -36,7 +36,6 @@ import java.awt.*;
 public class EmpleadoConsultaVista extends JDialog {
     private JTextField jtfNombreApellido;
     private JTable jtEmpleado;
-    private JButton jbBuscar;
     private JPopupMenu popupMenu;
     private EventoActionListener actionListener;
     private EventoMouseListener mouseListener;
@@ -85,7 +84,7 @@ public class EmpleadoConsultaVista extends JDialog {
 
     private JPanel panelBuscar () {
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createTitledBorder(null, "Ingrese nombre", TitledBorder.DEFAULT_JUSTIFICATION,
+        panel.setBorder(BorderFactory.createTitledBorder(null, "Ingrese nombre a buscar", TitledBorder.DEFAULT_JUSTIFICATION,
                 TitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.BOLD, 11)));
 
         GridBagConstraints conf = new GridBagConstraints();
@@ -94,23 +93,12 @@ public class EmpleadoConsultaVista extends JDialog {
         conf.weightx = 1.0;
         conf.anchor = GridBagConstraints.WEST;
         conf.fill = GridBagConstraints.HORIZONTAL;
-        conf.insets = new Insets(10, 20, 10, 10);
+        conf.insets = new Insets(20, 20, 20, 20);
 
         jtfNombreApellido = new JTextField(25);
         jtfNombreApellido.getDocument().addDocumentListener(documentListener);
 
         panel.add (jtfNombreApellido, conf);
-
-        //Fila 0 columna 1.
-        conf.gridx = 1;
-        conf.weightx = 0.0;
-        conf.fill = GridBagConstraints.NONE;
-        conf.insets = new Insets(10, 0, 10, 10);
-
-        jbBuscar = new JButton("Buscar");
-        jbBuscar.setActionCommand("jbBuscar");
-        jbBuscar.addActionListener(actionListener);
-        panel.add (jbBuscar, conf);
 
         return panel;
     }
@@ -143,17 +131,6 @@ public class EmpleadoConsultaVista extends JDialog {
         jtEmpleado.updateUI();
     }
 
-    private boolean datosValidos () {
-        //TODO: Comprobar que se ingrese solo letras.
-
-        if (jtfNombreApellido.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No puede estar vacío el campo de busqueda.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        return true;
-    }
-
     private JPopupMenu crearMenuEmergente () {
         popupMenu = new JPopupMenu();
 
@@ -173,14 +150,6 @@ public class EmpleadoConsultaVista extends JDialog {
             switch(e.getActionCommand()) {
                 case "jbCancelar":
                     dispose();
-                    break;
-
-                case "jbBuscar":
-                    if (datosValidos()) {
-                        List<Empleado> listEmp = empleadoDAO.buscarEmpleado(jtfNombreApellido.getText().trim());
-                        cargarTabla(listEmp);
-                        listEmpleado = listEmp;
-                    }
                     break;
 
                 case "jmiEliminar":
