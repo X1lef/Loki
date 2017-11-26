@@ -51,6 +51,10 @@ public class PrincipalVista extends JFrame {
 
         add(tb, BorderLayout.PAGE_START);
 
+        JPanel jpFondo = new JPanel();
+        jpFondo.setBackground(Color.lightGray);
+        add(jpFondo, BorderLayout.CENTER);
+
         setVisible(true);
     }
 
@@ -85,6 +89,7 @@ public class PrincipalVista extends JFrame {
                     break;
 
                 case "jbAcercaDe":
+                    new AcercaDeLoki(PrincipalVista.this);
                     break;
             }
         }

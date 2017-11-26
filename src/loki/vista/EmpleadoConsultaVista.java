@@ -71,7 +71,11 @@ public class EmpleadoConsultaVista extends JDialog {
         panelPrinc.add(Box.createRigidArea(new Dimension(0, 10)));
         panelPrinc.add(panelBuscar());
         panelPrinc.add(Box.createRigidArea(new Dimension(0, 10)));
-        panelPrinc.add(new JScrollPane(jtEmpleado));
+
+        JScrollPane sp = new JScrollPane(jtEmpleado);
+        sp.getViewport().setBackground(Color.lightGray);
+        panelPrinc.add(sp);
+
         panelPrinc.add(Box.createRigidArea(new Dimension(0, 10)));
         panelPrinc.add(panelBotones());
 
