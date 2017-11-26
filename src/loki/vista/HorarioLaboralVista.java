@@ -27,6 +27,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.border.TitledBorder;
@@ -234,35 +235,29 @@ public class HorarioLaboralVista extends JDialog {
         //Se obtiene los horarios laborales de los empleados de un determinado día.
         List<HorarioLaboral> listHorarioLab = new HorarioLaboralDAO().obtenerHorarioLabDia(indexDia);
 
-        TreeSet<Hora> tsHora = new TreeSet<>();
-        Hora hora;
+        TreeSet<LocalTime> tsHora = new TreeSet<>();
 
         //Se cargar el TreeSet.
         for (HorarioLaboral hl : listHorarioLab) {
-            hora = new Hora();
-
             //Se guarda hora de entrada.
-            hora.setHora(hl.getHoraEntrada());
-            tsHora.add(hora);
+            tsHora.add(LocalTime.parse(hl.getHoraEntrada()));
 
             //Se guarda hora de salida.
-            hora = new Hora();
-            hora.setHora(hl.getHoraSalida());
-            tsHora.add(hora);
+            tsHora.add(LocalTime.parse(hl.getHoraSalida()));
         }
 
-        List<Hora> listCabecera = new ArrayList<>(tsHora); //Contiene las horas que hay en el día seleccionado.
+        List<LocalTime> listCabecera = new ArrayList<>(tsHora); //Contiene las horas que hay en el día seleccionado.
         int cantEmpl, length = listCabecera.size() - 1;
         String horaBuscar;
 
         for (int c = 1, k = 0; k < length; c ++, k ++) {
-            horaBuscar = listCabecera.get(k).hora;
+            horaBuscar = listCabecera.get(k).toString();
             cantEmpl = 0;
 
             //Se agrega las cabeceras.
-            if (!jrbSabado.isSelected() && "12:00".equals(listCabecera.get(k + 1).hora) || k + 1 == length) {
+            if (!jrbSabado.isSelected() && "12:00".equals(listCabecera.get(k + 1).toString()) || k + 1 == length) {
                 k ++;
-                tableModel.addColumn(horaBuscar + " - " + listCabecera.get(k).hora);
+                tableModel.addColumn(horaBuscar + " - " + listCabecera.get(k).toString());
             } else {
                 tableModel.addColumn(horaBuscar);
             }
@@ -311,7 +306,7 @@ public class HorarioLaboralVista extends JDialog {
 
                     if (!entradaSalida) {
                         //Extraigo la hora anterior.
-                        String horaAnt = listCabecera.get(k - 1).hora;
+                        String horaAnt = listCabecera.get(k - 1).toString();
 
                         /*
                         Si son las 12:00hs todos los empleados salieron, así que al volver solo se tendrá
@@ -420,52 +415,6 @@ public class HorarioLaboralVista extends JDialog {
                     setHorizontalTextPosition(SwingConstants.CENTER);
                 }
             }
-        }
-    }
-
-    //Clase que utiliza el TreeSet para guardar las horas y ordenarlas.
-    private class Hora implements Comparable<Hora> {
-        private String hora;
-
-        String getHora() {
-            return hora;
-        }
-
-        void setHora(String hora) {
-            this.hora = hora;
-        }
-
-        @Override
-        public int compareTo(Hora h) {
-            //Se extrae la hora y el minuto.
-            String[] hora1 = h.hora.split(":");
-            String[] hora2 = hora.split(":");
-
-            //Convertir a integer.
-            int h1 = Integer.parseInt(hora1[0]);
-            int m1 = Integer.parseInt(hora1[1]);
-
-            int h2 = Integer.parseInt(hora2[0]);
-            int m2 = Integer.parseInt(hora2[1]);
-
-            if (h2 > h1) return 1;
-            if (h2 < h1) return -1;
-            if (h1 == h2) {
-                if (m2 > m1) return 1;
-                if (m2 < m1) return -1;
-            }
-
-            return 0;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o instanceof Hora) {
-                Hora h = (Hora) o;
-                return h.hora.equals(hora);
-            }
-
-            return false;
         }
     }
 }
