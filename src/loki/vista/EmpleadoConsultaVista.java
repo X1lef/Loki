@@ -59,6 +59,7 @@ public class EmpleadoConsultaVista extends JDialog {
         listEmpleado = new ArrayList<>();
 
         jtEmpleado = new JTable();
+        jtEmpleado.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtEmpleado.addMouseListener(mouseListener);
         jtEmpleado.getTableHeader().setReorderingAllowed(false);
         jtEmpleado.setDefaultRenderer(Object.class, new CeldaRenderizado());
