@@ -247,6 +247,7 @@ public class HorarioLaboralVista extends JDialog {
         }
 
         List<LocalTime> listCabecera = new ArrayList<>(tsHora); //Contiene las horas que hay en el día seleccionado.
+        ImageIcon icono = new ImageIcon(getClass().getResource("img/presente.png"));
         int cantEmpl, length = listCabecera.size() - 1;
         String horaBuscar;
 
@@ -262,6 +263,7 @@ public class HorarioLaboralVista extends JDialog {
                 tableModel.addColumn(horaBuscar);
             }
 
+            //Se comprueba los empleados presentes.
             if (c == 1) {
                 for (int f = 0; f < tableModel.getRowCount() - 1; f++) {
                     for (HorarioLaboral hl : listHorarioLab) {
@@ -269,15 +271,13 @@ public class HorarioLaboralVista extends JDialog {
                             String h = hl.getHoraEntrada();
 
                             if (h.equals(horaBuscar)) {
-                                tableModel.setValueAt(new ImageIcon(getClass().getResource("img/presente.png")), f, c);
+                                tableModel.setValueAt(icono, f, c);
                                 cantEmpl++;
                                 break;
                             }
                         }
                     }
                 }
-                //Se agrega cantidad de instructores.
-                tableModel.setValueAt(cantEmpl, tableModel.getRowCount() - 1, c);
 
             } else {
                 boolean entradaSalida;
@@ -289,7 +289,7 @@ public class HorarioLaboralVista extends JDialog {
                             String h = hl.getHoraEntrada();
 
                             if (h.equals(horaBuscar)) {
-                                tableModel.setValueAt(new ImageIcon(getClass().getResource("img/presente.png")), f, c);
+                                tableModel.setValueAt(icono, f, c);
                                 cantEmpl++;
                                 entradaSalida = true;
                                 break;
@@ -309,7 +309,7 @@ public class HorarioLaboralVista extends JDialog {
                         String horaAnt = listCabecera.get(k - 1).toString();
 
                         /*
-                        Si son las 12:00hs todos los empleados salieron, así que al volver solo se tendrá
+                        Si son las 12:00hs todos los empleados salieron. Al volver solo se tendrá
                         que cargar sus horarios de entrada.
                         Los sábados si se debe tener en cuenta las 12:00hs.
                          */
@@ -317,14 +317,14 @@ public class HorarioLaboralVista extends JDialog {
                             Icon icon = (Icon)tableModel.getValueAt(f, c - 1);
                             if (icon != null) {
                                 cantEmpl++;
-                                tableModel.setValueAt(new ImageIcon(getClass().getResource("img/presente.png")), f, c);
+                                tableModel.setValueAt(icono, f, c);
                             }
                         }
                     }
                 }
-                //Se agrega cantidad de instructores.
-                tableModel.setValueAt(cantEmpl, tableModel.getRowCount() - 1, c);
             }
+            //Se agrega cantidad de instructores.
+            tableModel.setValueAt(cantEmpl, tableModel.getRowCount() - 1, c);
         }
 
         //Se configura el campo Instructor.
