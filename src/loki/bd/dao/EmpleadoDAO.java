@@ -21,6 +21,7 @@ package loki.bd.dao;
 import loki.bd.conexion.Conexion;
 import loki.bd.vo.Empleado;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,7 +48,7 @@ public class EmpleadoDAO {
             statement.executeUpdate();
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo ();
@@ -64,8 +65,8 @@ public class EmpleadoDAO {
             statement.setString(1, numeroDeCedula);
             statement.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo();
@@ -88,7 +89,7 @@ public class EmpleadoDAO {
             statement.executeUpdate();
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo ();
@@ -111,7 +112,7 @@ public class EmpleadoDAO {
                 list.add(convertir(rs));
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo();
@@ -136,7 +137,7 @@ public class EmpleadoDAO {
                 list.add(convertir(rs));
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo();
@@ -157,8 +158,8 @@ public class EmpleadoDAO {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) Empleado = convertir(rs);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo();
@@ -183,7 +184,7 @@ public class EmpleadoDAO {
             while (rs.next()) list.add(convertir(rs));
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo();
@@ -213,7 +214,7 @@ public class EmpleadoDAO {
             }
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             conexion.cerrar();
         }

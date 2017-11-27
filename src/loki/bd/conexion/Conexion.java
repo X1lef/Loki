@@ -18,6 +18,7 @@
 
 package loki.bd.conexion;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ import java.sql.SQLException;
 public class Conexion {
     private static final String DB_CONNECTION = "jdbc:postgresql://localhost:5432/horario_laboral";
     private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "a4sf5h4j5gf5g";
+    private static final String DB_PASSWORD = "123456789";
     private Connection conexion = null;
 
     public Connection abrir () {
@@ -33,7 +34,7 @@ public class Conexion {
             conexion = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error de conexión", JOptionPane.ERROR_MESSAGE);
         }
 
         return conexion;
@@ -49,7 +50,7 @@ public class Conexion {
             }
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

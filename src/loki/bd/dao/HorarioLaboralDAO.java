@@ -21,6 +21,7 @@ package loki.bd.dao;
 import loki.bd.conexion.Conexion;
 import loki.bd.vo.HorarioLaboral;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class HorarioLaboralDAO {
             statement.executeUpdate();
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo ();
@@ -62,8 +63,8 @@ public class HorarioLaboralDAO {
             statement.setLong(1, id);
             statement.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo();
@@ -80,8 +81,8 @@ public class HorarioLaboralDAO {
             statement.setString(1, idEmpleado);
             statement.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo();
@@ -105,7 +106,7 @@ public class HorarioLaboralDAO {
             statement.executeUpdate();
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo ();
@@ -128,7 +129,7 @@ public class HorarioLaboralDAO {
                 list.add(convertir(rs));
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo();
@@ -150,8 +151,8 @@ public class HorarioLaboralDAO {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) listHorarioLab.add(convertir(rs));
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo();
@@ -173,8 +174,8 @@ public class HorarioLaboralDAO {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) listHorarioLab.add(convertir(rs));
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             cerrarTodo();
@@ -208,7 +209,7 @@ public class HorarioLaboralDAO {
                 }
 
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
