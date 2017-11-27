@@ -432,30 +432,32 @@ public class EmpleadoVista extends JDialog {
                         empleado.setApellido(jtfApellido.getText().trim());
                         empleado.setActivo(jcbActivo.isSelected());
 
-                        empleadoDAO.insertarEmpleado(empleado);
+                        //Se comprueba si se pudo guardar el empleado.
+                        if (empleadoDAO.insertarEmpleado(empleado)) {
 
-                        //Se obtiene los datos del horario laboral del empleado.
-                        for (int f = 0; f < tableModel.getRowCount(); f += 2) {
-                            for (int c = 1; c < 7; c++) {
-                                horaEntrada = String.valueOf(tableModel.getValueAt(f, c));
+                            //Se obtiene los datos del horario laboral del empleado.
+                            for (int f = 0; f < tableModel.getRowCount(); f += 2) {
+                                for (int c = 1; c < 7; c++) {
+                                    horaEntrada = String.valueOf(tableModel.getValueAt(f, c));
 
-                                //Si la hora de entrada esta vacia saltear celda.
-                                if (!horaEntrada.trim().isEmpty()) {
-                                    horaSalida = String.valueOf(tableModel.getValueAt(f + 1, c));
+                                    //Si la hora de entrada esta vacia saltear celda.
+                                    if (!horaEntrada.trim().isEmpty()) {
+                                        horaSalida = String.valueOf(tableModel.getValueAt(f + 1, c));
 
-                                    //Se obtiene el horario laboral
-                                    horarioLaboral.setIdEmpleado(jtfId.getText());
-                                    horarioLaboral.setDiaLaboral(c);
-                                    horarioLaboral.setHoraEntrada(horaEntrada);
-                                    horarioLaboral.setHoraSalida(horaSalida);
+                                        //Se obtiene el horario laboral
+                                        horarioLaboral.setIdEmpleado(jtfId.getText());
+                                        horarioLaboral.setDiaLaboral(c);
+                                        horarioLaboral.setHoraEntrada(horaEntrada);
+                                        horarioLaboral.setHoraSalida(horaSalida);
 
-                                    horarioLaboralDAO.insertarHorarioLaboral(horarioLaboral);
+                                        horarioLaboralDAO.insertarHorarioLaboral(horarioLaboral);
+                                    }
                                 }
                             }
-                        }
 
-                        JOptionPane.showMessageDialog(EmpleadoVista.this, "Se ha guardado correctamente el registro.");
-                        limpiarComponentes();
+                            JOptionPane.showMessageDialog(EmpleadoVista.this, "Se ha guardado correctamente el registro.");
+                            limpiarComponentes();
+                        }
                     }
                     break;
 
@@ -482,67 +484,69 @@ public class EmpleadoVista extends JDialog {
                         empleado.setApellido(jtfApellido.getText().trim());
                         empleado.setActivo(jcbActivo.isSelected());
 
-                        empleadoDAO.actualizarEmpleado(empleado);
+                        //Se comprueba si se pudo actualizar el empleado.
+                        if (empleadoDAO.actualizarEmpleado(empleado)) {
 
-                        //Se obtiene el horario laboral del empleado.
-                        int index = 0;
-                        HorarioLaboral horarioLabMod;
-                        horarioLaboral = new HorarioLaboral();
-                        for (int c = 1; c < 7; c++) {
-                            for (int f = 0; f < tableModel.getRowCount(); f += 2) {
-                                horaEntrada = String.valueOf(tableModel.getValueAt(f, c));
+                            //Se obtiene el horario laboral del empleado.
+                            int index = 0;
+                            HorarioLaboral horarioLabMod;
+                            horarioLaboral = new HorarioLaboral();
+                            for (int c = 1; c < 7; c++) {
+                                for (int f = 0; f < tableModel.getRowCount(); f += 2) {
+                                    horaEntrada = String.valueOf(tableModel.getValueAt(f, c));
 
-                                //Si la hora de entrada esta vacia saltear celda.
-                                if (!horaEntrada.trim().isEmpty()) {
-                                    horaSalida = String.valueOf(tableModel.getValueAt(f + 1, c));
-                                    horarioLabMod = listHorarioLab.get(index);
+                                    //Si la hora de entrada esta vacia saltear celda.
+                                    if (!horaEntrada.trim().isEmpty()) {
+                                        horaSalida = String.valueOf(tableModel.getValueAt(f + 1, c));
+                                        horarioLabMod = listHorarioLab.get(index);
 
-                                    //Se comprueba si son iguales los días.
-                                    if (horarioLabMod.getDiaLaboral() == c) {
+                                        //Se comprueba si son iguales los días.
+                                        if (horarioLabMod.getDiaLaboral() == c) {
 
-                                        //Se comprueba si se ha alterado los datos.
-                                        if (!horarioLabMod.getHoraEntrada().equals(horaEntrada) ||
-                                                !horarioLabMod.getHoraSalida().equals(horaSalida)) {
+                                            //Se comprueba si se ha alterado los datos.
+                                            if (!horarioLabMod.getHoraEntrada().equals(horaEntrada) ||
+                                                    !horarioLabMod.getHoraSalida().equals(horaSalida)) {
 
-                                            //Operación para actualizar registro.
-                                            horarioLaboral.setIdCargaHoraria(horarioLabMod.getIdCargaHoraria());
-                                            horarioLaboral.setIdEmpleado(jtfId.getText().trim());
-                                            horarioLaboral.setDiaLaboral(c);
-                                            horarioLaboral.setHoraEntrada(horaEntrada);
-                                            horarioLaboral.setHoraSalida(horaSalida);
+                                                //Operación para actualizar registro.
+                                                horarioLaboral.setIdCargaHoraria(horarioLabMod.getIdCargaHoraria());
+                                                horarioLaboral.setIdEmpleado(jtfId.getText().trim());
+                                                horarioLaboral.setDiaLaboral(c);
+                                                horarioLaboral.setHoraEntrada(horaEntrada);
+                                                horarioLaboral.setHoraSalida(horaSalida);
 
-                                            horarioLaboralDAO.actualizarHorarioLaboral(horarioLaboral);
+                                                horarioLaboralDAO.actualizarHorarioLaboral(horarioLaboral);
 
-                                        }
-                                        index++;
-
-                                    } else {
-                                        if (listHorarioLab.get(index).getDiaLaboral() > c) {
-                                            //Operación para insertar nuevo registro.
-                                            horarioLaboral.setIdEmpleado(jtfId.getText().trim());
-                                            horarioLaboral.setDiaLaboral(c);
-                                            horarioLaboral.setHoraEntrada(horaEntrada);
-                                            horarioLaboral.setHoraSalida(horaSalida);
-
-                                            horarioLaboralDAO.insertarHorarioLaboral(horarioLaboral);
+                                            }
+                                            index++;
 
                                         } else {
-                                            //Operación para eliminar registro.
-                                            horarioLaboralDAO.eliminarHorarioLaboral(horarioLabMod.getIdCargaHoraria());
+                                            if (listHorarioLab.get(index).getDiaLaboral() > c) {
+                                                //Operación para insertar nuevo registro.
+                                                horarioLaboral.setIdEmpleado(jtfId.getText().trim());
+                                                horarioLaboral.setDiaLaboral(c);
+                                                horarioLaboral.setHoraEntrada(horaEntrada);
+                                                horarioLaboral.setHoraSalida(horaSalida);
 
-                                            f -= 2; //Se decrementa la fila de la tabla.
-                                            index++;
+                                                horarioLaboralDAO.insertarHorarioLaboral(horarioLaboral);
+
+                                            } else {
+                                                //Operación para eliminar registro.
+                                                horarioLaboralDAO.eliminarHorarioLaboral(horarioLabMod.getIdCargaHoraria());
+
+                                                f -= 2; //Se decrementa la fila de la tabla.
+                                                index++;
+                                            }
                                         }
                                     }
                                 }
                             }
+
+                            JOptionPane.showMessageDialog(EmpleadoVista.this, "Se ha actualizado correctamente el registro.");
+
+                            //Se actualiza la tabla de Empleados.
+                            empleadoConsultaVista.cargarTabla(new EmpleadoDAO().todosLosEmpleados());
+                            dispose();
                         }
-
-                        JOptionPane.showMessageDialog(EmpleadoVista.this, "Se ha actualizado correctamente el registro.");
-
-                        //Se actualiza la tabla de Empleados.
-                        empleadoConsultaVista.cargarTabla(new EmpleadoDAO().todosLosEmpleados());
-                        dispose();
                     }
                     break;
 

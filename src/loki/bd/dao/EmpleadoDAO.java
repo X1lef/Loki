@@ -33,7 +33,7 @@ public class EmpleadoDAO {
     private final Conexion conexion = new Conexion();
     private PreparedStatement statement = null;
 
-    public void insertarEmpleado (Empleado empleado) {
+    public boolean insertarEmpleado (Empleado empleado) {
         final String sql = "INSERT INTO empleado (cedula_identidad, nombre, apellido, activo) VALUES (?,?,?,?)";
 
         try {
@@ -49,10 +49,13 @@ public class EmpleadoDAO {
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
 
         } finally {
             cerrarTodo ();
         }
+
+        return true;
     }
 
     public void eliminarEmpleado (String numeroDeCedula) {
@@ -73,7 +76,7 @@ public class EmpleadoDAO {
         }
     }
 
-    public void actualizarEmpleado (Empleado empleado) {
+    public boolean actualizarEmpleado (Empleado empleado) {
         String sql = "UPDATE empleado SET cedula_identidad = ?, nombre = ?, apellido = ?, activo = ? WHERE cedula_identidad = ?";
 
         try {
@@ -90,10 +93,13 @@ public class EmpleadoDAO {
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
 
         } finally {
             cerrarTodo ();
         }
+
+        return true;
     }
 
     public List<Empleado> todosLosEmpleados () {
