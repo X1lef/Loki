@@ -128,7 +128,7 @@ public class EmpleadoVista extends JDialog {
         //Fila 3 columna 1.
         conf.gridy = 3;
 
-        jcbActivo = new JCheckBox("Activo");
+        jcbActivo = new JCheckBox("Activo", true);
         jcbActivo.setBorder(null);
         add(jcbActivo, conf);
 
