@@ -19,6 +19,7 @@
 package loki.vista;
 
 import loki.bd.dao.EmpleadoDAO;
+import loki.bd.dao.HorarioLaboralDAO;
 import loki.bd.vo.Empleado;
 
 import javax.swing.*;
@@ -164,6 +165,7 @@ public class EmpleadoConsultaVista extends JDialog {
                     if (resp == JOptionPane.OK_OPTION) {
                         Empleado emp = listEmpleado.remove(fila);
                         //Se elimina de la bd.
+                        new HorarioLaboralDAO().eliminarHorarioLaboral(emp.getNumeroDeCedula());
                         empleadoDAO.eliminarEmpleado(emp.getNumeroDeCedula());
 
                         ((DefaultTableModel) jtEmpleado.getModel()).removeRow(fila);
