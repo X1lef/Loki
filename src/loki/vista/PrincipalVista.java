@@ -28,7 +28,8 @@ public class PrincipalVista extends JFrame {
     private EventoActionListener actionListener;
 
     PrincipalVista () {
-        setSize(850, 600);
+        setSize(800, 600);
+        setMinimumSize(new Dimension(800, 600));
         setTitle("Sistema de Gestión de Horario Laboral");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
