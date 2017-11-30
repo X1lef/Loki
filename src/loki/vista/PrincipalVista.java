@@ -29,7 +29,7 @@ public class PrincipalVista extends JFrame {
 
     PrincipalVista () {
         setSize(850, 600);
-        setTitle("Loki");
+        setTitle("Sistema de Gestión de Horario Laboral");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
