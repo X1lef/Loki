@@ -38,8 +38,10 @@ public class EmpleadoConsultaVista extends JDialog {
     private JTextField jtfNombreApellido;
     private JTable jtEmpleado;
     private JPopupMenu popupMenu;
+    private JLabel jlItemReg;
     private EventoActionListener actionListener;
     private EventoMouseListener mouseListener;
+    private EventoMouseMotionListener mouseMotionListener;
     private EventoDocumentListener documentListener;
     private List<Empleado> listEmpleado;
     private EmpleadoDAO empleadoDAO;
@@ -48,7 +50,7 @@ public class EmpleadoConsultaVista extends JDialog {
     public EmpleadoConsultaVista (JFrame frame) {
         super(frame, "Consulta Empleado", true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setLayout(new GridLayout(1,1));
+        setLayout(new GridBagLayout());
         setSize(620, 500);
         setMinimumSize(new Dimension(500, 500));
         setLocationRelativeTo(null);
@@ -56,32 +58,50 @@ public class EmpleadoConsultaVista extends JDialog {
         actionListener = new EventoActionListener();
         mouseListener = new EventoMouseListener();
         documentListener = new EventoDocumentListener();
+        mouseMotionListener = new EventoMouseMotionListener();
         empleadoDAO = new EmpleadoDAO();
         listEmpleado = new ArrayList<>();
 
         jtEmpleado = new JTable();
         jtEmpleado.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtEmpleado.addMouseListener(mouseListener);
+        jtEmpleado.addMouseMotionListener(mouseMotionListener);
         jtEmpleado.getTableHeader().setReorderingAllowed(false);
         jtEmpleado.setDefaultRenderer(Object.class, new CeldaRenderizado());
         crearMenuEmergente();
 
-        JPanel panelPrinc = new JPanel();
-        panelPrinc.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panelPrinc.setLayout(new BoxLayout(panelPrinc, BoxLayout.Y_AXIS));
+        GridBagConstraints conf = new GridBagConstraints();
 
-        panelPrinc.add(Box.createRigidArea(new Dimension(0, 10)));
-        panelPrinc.add(panelBuscar());
-        panelPrinc.add(Box.createRigidArea(new Dimension(0, 10)));
+        //Fila 0 columna 0.
+        conf.fill = GridBagConstraints.HORIZONTAL;
+        conf.insets = new Insets(10, 10, 10, 10);
+        conf.weightx = 1.0;
+
+        add(panelBuscar(), conf);
+
+        //Fila 1 columna 0.
+        conf.gridy = 1;
+        conf.insets = new Insets(0, 10, 10, 10);
+
+        jlItemReg = new JLabel();
+        jlItemReg.setFont(new Font("Tahoma", Font.BOLD, 11));
+        add(jlItemReg, conf);
+
+        //Fila 2 columna 0.
+        conf.gridy = 2;
+        conf.weighty = 1.0;
+        conf.fill = GridBagConstraints.BOTH;
 
         JScrollPane sp = new JScrollPane(jtEmpleado);
         sp.getViewport().setBackground(Color.lightGray);
-        panelPrinc.add(sp);
+        add(sp, conf);
 
-        panelPrinc.add(Box.createRigidArea(new Dimension(0, 10)));
-        panelPrinc.add(panelBotones());
+        //Fila 3 columna 0.
+        conf.gridy = 3;
+        conf.weighty = 0.0;
+        conf.fill = GridBagConstraints.HORIZONTAL;
 
-        add(panelPrinc);
+        add(panelBotones(), conf);
 
         cargarTabla(empleadoDAO.todosLosEmpleados());
 
@@ -135,6 +155,9 @@ public class EmpleadoConsultaVista extends JDialog {
 
         jtEmpleado.setModel(tableModel);
         jtEmpleado.updateUI();
+
+        //Se actualiza la cantidad de registros.
+        jlItemReg.setText("0 de " + jtEmpleado.getRowCount());
     }
 
     private JPopupMenu crearMenuEmergente () {
@@ -184,6 +207,9 @@ public class EmpleadoConsultaVista extends JDialog {
                 Empleado emp = listEmpleado.get(jtEmpleado.getSelectedRow());
                 new EmpleadoVista (EmpleadoConsultaVista.this, emp);
             }
+
+            //Se actualiza el index del registro seleccionado.
+            jlItemReg.setText((jtEmpleado.getSelectedRow() + 1) + " de " + jtEmpleado.getRowCount());
         }
 
         @Override
@@ -234,6 +260,14 @@ public class EmpleadoConsultaVista extends JDialog {
                     cargarTabla(Collections.emptyList());
                 }
             }
+        }
+    }
+
+    private class EventoMouseMotionListener extends MouseMotionAdapter {
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            //Se actualiza el index del registro seleccionado.
+            jlItemReg.setText((jtEmpleado.getSelectedRow() + 1) + " de " + jtEmpleado.getRowCount());
         }
     }
 
