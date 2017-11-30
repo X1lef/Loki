@@ -293,7 +293,8 @@ public class EmpleadoVista extends JDialog {
                         if (horaSalida.trim().isEmpty()) {
                             JOptionPane.showMessageDialog(this, "Debe ingresar el horario de salida. Fila " + (f + 2) + ", Columna " + c,
                                     "Error", JOptionPane.ERROR_MESSAGE);
-                            jtCargaHoraria.setColumnSelectionInterval(f + 1, c);
+                            jtCargaHoraria.setRowSelectionInterval(f + 1, f + 1);
+                            jtCargaHoraria.setColumnSelectionInterval(c, c);
                             return false;
                         } else {
                             if (horaValida(horaSalida)) {
@@ -301,6 +302,7 @@ public class EmpleadoVista extends JDialog {
                                     JOptionPane.showMessageDialog(this, "Las horas de entrada y salida no deben ser iguales. Fila " + (f + 1) + ", Columna " + c,
                                             "Error", JOptionPane.ERROR_MESSAGE);
                                     jtCargaHoraria.setRowSelectionInterval(f, f);
+                                    jtCargaHoraria.setColumnSelectionInterval(c, c);
                                     return false;
                                 }
 
@@ -312,20 +314,23 @@ public class EmpleadoVista extends JDialog {
                                 if (horaEntr.isAfter(horaSal)) {
                                     JOptionPane.showMessageDialog(this, "La hora de entrada debe ser menor que la hora de salida. Fila " + (f + 1) + ", Columna " + c,
                                             "Error", JOptionPane.ERROR_MESSAGE);
-                                    jtCargaHoraria.setColumnSelectionInterval(f, c);
+                                    jtCargaHoraria.setRowSelectionInterval(f, f);
+                                    jtCargaHoraria.setColumnSelectionInterval(c, c);
                                     return false;
                                 }
                             } else {
                                 JOptionPane.showMessageDialog(this, "El formato de la hora es incorrecto, formato correcto HH:MM. Fila " + (f + 2) + ", Columna " + c,
                                         "Error", JOptionPane.ERROR_MESSAGE);
-                                jtCargaHoraria.setColumnSelectionInterval(f, c);
+                                jtCargaHoraria.setRowSelectionInterval(f + 1, f + 1);
+                                jtCargaHoraria.setColumnSelectionInterval(c, c);
                                 return false;
                             }
                         }
                     } else {
                         JOptionPane.showMessageDialog(this, "El formato de la hora es incorrecto, formato correcto HH:MM. Fila " + (f + 1) + ", Columna " + c,
                                 "Error", JOptionPane.ERROR_MESSAGE);
-                        jtCargaHoraria.setColumnSelectionInterval(f, c);
+                        jtCargaHoraria.setRowSelectionInterval(f, f);
+                        jtCargaHoraria.setColumnSelectionInterval(c, c);
                         return false;
                     }
                 } else {
@@ -334,7 +339,8 @@ public class EmpleadoVista extends JDialog {
 
                     JOptionPane.showMessageDialog(this, "Debe ingresar el horario de entrada. Fila " + (f + 1) + ", Columna " + c,
                             "Error", JOptionPane.ERROR_MESSAGE);
-                    jtCargaHoraria.setColumnSelectionInterval(f, c);
+                    jtCargaHoraria.setRowSelectionInterval(f, f);
+                    jtCargaHoraria.setColumnSelectionInterval(c, c);
                     return false;
                 }
             }
@@ -349,7 +355,8 @@ public class EmpleadoVista extends JDialog {
                     if (horaEntrada.equals(horaSalida)) {
                         JOptionPane.showMessageDialog(this, "Las horas de entrada y salida no deben ser iguales. Fila " + (f + 2) + ", Columna " + c,
                                 "Error", JOptionPane.ERROR_MESSAGE);
-                        jtCargaHoraria.setColumnSelectionInterval(f + 1, c);
+                        jtCargaHoraria.setRowSelectionInterval(f + 1, f + 1);
+                        jtCargaHoraria.setColumnSelectionInterval(c, c);
                         return false;
                     }
 
@@ -359,7 +366,8 @@ public class EmpleadoVista extends JDialog {
                     if (horaSal.isAfter(horaEntr)) {
                         JOptionPane.showMessageDialog(this, "La hora de salida debe ser menor que la hora de entrada. Fila " + (f + 1) + ", Columna " + c,
                                 "Error", JOptionPane.ERROR_MESSAGE);
-                        jtCargaHoraria.setColumnSelectionInterval(f + 1, c);
+                        jtCargaHoraria.setRowSelectionInterval(f, f); //Se selecciona la fila.
+                        jtCargaHoraria.setColumnSelectionInterval(c, c); //Se selecciona la columna.
                         return false;
                     }
                 } else {
