@@ -20,18 +20,23 @@ package loki.vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
+import java.net.URI;
 import java.util.Map;
 
 public class AcercaDeLoki extends JDialog {
     private JLabel jlSO, jlJRE, jlJVM;
     private static final String VERSION = "1.0";
+    private EventoMouseListener mouseListener;
 
     AcercaDeLoki (JFrame frame) {
         super (frame, "Acerca de Loki", true);
         setResizable(false);
         setLayout(new GridBagLayout());
 
+        mouseListener = new EventoMouseListener();
         GridBagConstraints conf = new GridBagConstraints();
 
         //Fila 0 columna 0.
@@ -85,6 +90,7 @@ public class AcercaDeLoki extends JDialog {
 
         JLabel jlCodFuente = new JLabel ("https://github.com/X1lef/Loki");
         jlCodFuente.setForeground(Color.BLUE);
+        jlCodFuente.addMouseListener(mouseListener);
         jlCodFuente.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         //Se configura la etiqueta para que salga subrayado.
@@ -105,5 +111,16 @@ public class AcercaDeLoki extends JDialog {
         jlSO.setText("S.O : " + System.getProperty("os.name") + " " + System.getProperty("os.arch"));
         jlJVM.setText("JVM : " + System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version"));
         jlJRE.setText("JRE : " + System.getProperty("java.runtime.name") + " " + System.getProperty("java.runtime.version"));
+    }
+
+    private class EventoMouseListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://github.com/X1lef/Loki"));
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }
