@@ -20,6 +20,8 @@ package loki.vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 
 public class AcercaDeLoki extends JDialog {
     private JLabel jlSO, jlJRE, jlJVM;
@@ -71,10 +73,27 @@ public class AcercaDeLoki extends JDialog {
 
         //Fila 6 columna 0.
         conf.gridy = 6;
-        conf.insets = new Insets(0, 32, 25, 32);
+        conf.insets = new Insets(0, 32, 32, 32);
 
         jlJVM =  new JLabel();
         add (jlJVM, conf);
+
+        //Fila 7 columna 0.
+        conf.gridy = 7;
+        conf.fill = GridBagConstraints.NONE;
+        conf.insets = new Insets(0, 32, 10, 32);
+
+        JLabel jlCodFuente = new JLabel ("https://github.com/X1lef/Loki");
+        jlCodFuente.setForeground(Color.BLUE);
+        jlCodFuente.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        //Se configura la etiqueta para que salga subrayado.
+        Font font = jlCodFuente.getFont();
+        Map atributo = font.getAttributes();
+        atributo.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        jlCodFuente.setFont(font.deriveFont(atributo));
+
+        add(jlCodFuente, conf);
 
         cargarEtiquetas();
         pack();
