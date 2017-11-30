@@ -280,6 +280,12 @@ public class EmpleadoVista extends JDialog {
         }
 
         DefaultTableModel tm = (DefaultTableModel)jtCargaHoraria.getModel();
+
+        if (tm.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar el horario laboral.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         String horaEntrada, horaSalida;
         LocalTime horaEntr, horaSal;
 
