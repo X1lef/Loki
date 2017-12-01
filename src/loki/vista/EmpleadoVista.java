@@ -70,7 +70,7 @@ public class EmpleadoVista extends JDialog {
     }
 
     private void init () {
-        setTitle("Empleado");
+        setTitle("Instructor");
         setModal(true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new GridBagLayout());

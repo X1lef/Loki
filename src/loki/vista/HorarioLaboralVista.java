@@ -45,7 +45,7 @@ public class HorarioLaboralVista extends JDialog {
     private EventoActionListener actionListener;
 
     HorarioLaboralVista (JFrame frame) {
-        super (frame, "Horario Laboral", true);
+        super (frame, "Cantidad de instructores en el día", true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new GridLayout(1,1));
         setSize(950, 500);

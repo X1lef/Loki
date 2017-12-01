@@ -48,7 +48,7 @@ public class EmpleadoConsultaVista extends JDialog {
     private boolean realizoBusq;
 
     public EmpleadoConsultaVista (JFrame frame) {
-        super(frame, "Consulta Empleado", true);
+        super(frame, "Consulta de Instructores", true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new GridBagLayout());
         setSize(620, 500);
