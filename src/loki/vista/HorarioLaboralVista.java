@@ -68,8 +68,8 @@ public class HorarioLaboralVista extends JDialog {
         add(panelPrinc);
 
         int indexDia = diaLaboralActual();
-        cargarTabla(indexDia);
         seleccionarDia(indexDia);
+        cargarTabla(indexDia);
 
         setVisible(true);
     }
@@ -125,8 +125,7 @@ public class HorarioLaboralVista extends JDialog {
         panel.setBorder(BorderFactory.createTitledBorder(null, "Día Laboral", TitledBorder.DEFAULT_JUSTIFICATION,
                 TitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.BOLD, 11)));
 
-
-        jrbLunes = new JRadioButton("L", true);
+        jrbLunes = new JRadioButton("L");
         jrbLunes.setFocusable(false);
         jrbLunes.setActionCommand("jrbLunes");
         jrbLunes.addActionListener(actionListener);
