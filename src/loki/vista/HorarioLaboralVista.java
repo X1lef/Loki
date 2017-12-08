@@ -259,7 +259,7 @@ public class HorarioLaboralVista extends JDialog {
                 k ++;
                 tableModel.addColumn(horaBuscar + " - " + listCabecera.get(k).toString());
             } else {
-                tableModel.addColumn(horaBuscar);
+                tableModel.addColumn(horaBuscar + " - " + listCabecera.get(k + 1).minusMinutes(1));
             }
 
             //Se comprueba los empleados presentes.
