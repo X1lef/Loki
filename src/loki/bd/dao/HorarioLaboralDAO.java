@@ -113,31 +113,6 @@ public class HorarioLaboralDAO {
         }
     }
 
-    public List<HorarioLaboral> todosLosHorarioLaborales () {
-        final String sql = "SELECT * FROM horario_laboral";
-
-        List <HorarioLaboral> list = new ArrayList<>();
-
-        try {
-            Connection dbConnection = conexion.abrir();
-            statement = dbConnection.prepareStatement(sql);
-
-            ResultSet rs = statement.executeQuery();
-
-            //Inserto los registros a la lista de HorarioLaborals.
-            while (rs.next())
-                list.add(convertir(rs));
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-
-        } finally {
-            cerrarTodo();
-        }
-
-        return list;
-    }
-
     public List<HorarioLaboral> obtenerHorarioLaboral (String cedula_identidad) {
         String sql = "SELECT id, id_empleado, dia_laboral, to_char(hora_entrada, 'HH24:MI'), to_char(hora_salida, 'HH24:MI') " +
                 "FROM horario_laboral WHERE id_empleado = ? ORDER BY dia_laboral, hora_entrada";
