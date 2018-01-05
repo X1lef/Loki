@@ -58,7 +58,7 @@ public class AcercaDeLoki extends JDialog {
         conf.gridy = 2;
         conf.insets = new Insets(0, 32, 10, 32);
 
-        add (new JLabel("Licencia : GPL"), conf);
+        add (new JLabel("Licencia : GPL 2.0"), conf);
 
         //Fila 3 columna 0.
         conf.gridy = 3;
