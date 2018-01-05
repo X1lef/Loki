@@ -192,6 +192,8 @@ public class EmpleadoConsultaVista extends JDialog {
                         empleadoDAO.eliminarEmpleado(emp.getNumeroDeCedula());
 
                         ((DefaultTableModel) jtEmpleado.getModel()).removeRow(fila);
+                        //Se actualiza la cantidad de registros.
+                        jlItemReg.setText("0 de " + jtEmpleado.getRowCount());
                     }
                     break;
             }
