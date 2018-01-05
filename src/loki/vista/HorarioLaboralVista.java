@@ -24,8 +24,7 @@ import loki.bd.vo.Empleado;
 import loki.bd.vo.HorarioLaboral;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -41,8 +40,12 @@ public class HorarioLaboralVista extends JDialog {
     private JRadioButton jrbLunes, jrbMartes, jrbMiercoles, jrbJueves, jrbViernes, jrbSabado;
     private JTable jtHorarioLaboralPorDia;
     private JButton jbCancelar;
+    private JLabel jlItemReg;
     private JPanel jpHorarioLaboral;
     private EventoActionListener actionListener;
+    private EventoMouseListener mouseListener;
+    private EventoMouseMotionListener mouseMotionListener;
+    private int cantEmpActivos;
 
     HorarioLaboralVista (JFrame frame) {
         super (frame, "Cantidad de instructores en el día", true);
@@ -53,6 +56,8 @@ public class HorarioLaboralVista extends JDialog {
         setLocationRelativeTo(null);
 
         actionListener = new EventoActionListener();
+        mouseListener = new EventoMouseListener();
+        mouseMotionListener = new EventoMouseMotionListener();
 
         JPanel panelPrinc = new JPanel();
         panelPrinc.setLayout(new BoxLayout(panelPrinc, BoxLayout.Y_AXIS));
@@ -70,6 +75,7 @@ public class HorarioLaboralVista extends JDialog {
         int indexDia = diaLaboralActual();
         seleccionarDia(indexDia);
         cargarTabla(indexDia);
+        actualizarItemRegistro();
 
         setVisible(true);
     }
@@ -181,14 +187,26 @@ public class HorarioLaboralVista extends JDialog {
         GridBagConstraints conf = new GridBagConstraints();
 
         //Fila 0 columna 0.
+        conf.weightx = 1.0;
+        conf.anchor = GridBagConstraints.WEST;
         conf.insets = new Insets(10, 10, 10, 10);
-        conf.weightx = conf.weighty = 1.0;
+
+        jlItemReg = new JLabel();
+        jlItemReg.setFont(new Font("Tahoma", Font.BOLD, 11));
+        panel.add(jlItemReg, conf);
+
+        //Fila 1 columna 0.
+        conf.gridy = 1;
+        conf.weighty = 1.0;
+        conf.insets = new Insets(0, 10, 10, 10);
         conf.fill = GridBagConstraints.BOTH;
 
         jtHorarioLaboralPorDia = new JTable(new ModeloTabla());
         jtHorarioLaboralPorDia.setDefaultRenderer(Object.class, new CeldaRenderizado());
         jtHorarioLaboralPorDia.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtHorarioLaboralPorDia.getTableHeader().setReorderingAllowed(false);
+        jtHorarioLaboralPorDia.addMouseListener(mouseListener);
+        jtHorarioLaboralPorDia.addMouseMotionListener(mouseMotionListener);
 
         JScrollPane sp = new JScrollPane(jtHorarioLaboralPorDia);
         sp.getViewport().setBackground(Color.lightGray);
@@ -215,6 +233,7 @@ public class HorarioLaboralVista extends JDialog {
 
         //Obtener a todos los empleados activos.
         List<Empleado> listEmp = new EmpleadoDAO().todosLosEmpleadosActivos();
+        cantEmpActivos = listEmp.size();
         String[] arrayEmp = new String[listEmp.size() + 1];
         StringBuilder nombreApellido;
 
@@ -333,6 +352,13 @@ public class HorarioLaboralVista extends JDialog {
         tc.setCellRenderer(jtHorarioLaboralPorDia.getTableHeader().getDefaultRenderer());
     }
 
+    private void actualizarItemRegistro () {
+        int item = jtHorarioLaboralPorDia.getSelectedRow() + 1;
+
+        if (item > cantEmpActivos) jlItemReg.setText("0 de " + cantEmpActivos);
+        else jlItemReg.setText(item + " de " + cantEmpActivos);
+    }
+
     private class ModeloTabla extends DefaultTableModel {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -393,6 +419,20 @@ public class HorarioLaboralVista extends JDialog {
                             TitledBorder.DEFAULT_POSITION, new Font("Tahoma", Font.BOLD, 11)));
                     cargarTabla(indexDia);
             }
+        }
+    }
+
+    private class EventoMouseMotionListener extends MouseMotionAdapter {
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            actualizarItemRegistro();
+        }
+    }
+
+    private class EventoMouseListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent event) {
+            actualizarItemRegistro();
         }
     }
 
