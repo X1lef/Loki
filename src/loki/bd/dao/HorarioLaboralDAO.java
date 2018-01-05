@@ -163,7 +163,8 @@ public class HorarioLaboralDAO {
 
     public List<HorarioLaboral> obtenerHorarioLabDia (int indexDia) {
         String sql = "SELECT id, id_empleado, dia_laboral, to_char(hora_entrada, 'HH24:MI'),to_char(hora_salida, 'HH24:MI') " +
-                "FROM horario_laboral WHERE dia_laboral = ? ORDER BY hora_entrada";
+                "FROM horario_laboral INNER JOIN empleado ON id_empleado = cedula_identidad WHERE dia_laboral = ? and activo = true " +
+                "ORDER BY hora_entrada";
         List<HorarioLaboral> listHorarioLab = new ArrayList<>();
 
         try {
